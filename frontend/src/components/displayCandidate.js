@@ -5,6 +5,7 @@ const DisplayCandidate = () => {
   const [data, setData] = useState([]);
   const [name, setName] = useState('');
   const [party, setParty] = useState('');
+  const [votedCandidates, setVotedCandidates] = useState(new Set());
 
   const fetchData = async () => {
     try {
@@ -16,9 +17,6 @@ const DisplayCandidate = () => {
       });
       console.log(response.data);
       setData(response.data);
-      // if (response.data) {
-      //   alert('Fetched successfully');
-      // }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -30,11 +28,13 @@ const DisplayCandidate = () => {
 
   const handleNameChange = (e) => setName(e.target.value);
   const handlePartyChange = (e) => setParty(e.target.value);
+
   const handleVote = async (candidateName) => {
     try {
       const response = await axios.post("http://localhost:8000/vote", { name: candidateName });
       if (response.status === 200) {
         alert('Vote registered successfully');
+        setVotedCandidates(prev => new Set(prev).add(candidateName));
         fetchData(); // Refresh data to update vote counts
       }
     } catch (error) {
@@ -42,6 +42,7 @@ const DisplayCandidate = () => {
       alert('Error registering vote');
     }
   };
+
   return (
     <>
       <div>
@@ -69,7 +70,11 @@ const DisplayCandidate = () => {
               <td>{item.name}</td>
               <td>{item.party}</td>
               <td>
-              <button onClick={() => handleVote(item.name)}>Vote</button>
+                {votedCandidates.has(item.name) ? (
+                  <button disabled>Voted</button>
+                ) : (
+                  <button onClick={() => handleVote(item.name)}>Vote</button>
+                )}
               </td>
             </tr>
           ))}

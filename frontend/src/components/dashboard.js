@@ -11,8 +11,8 @@ const Dashboard = () => {
       const response = await axios.get("http://localhost:8000/dashboard", {
         params: { name, party }
       });
-      console.log(response.data);
-      setData(response.data);
+      const sortedData = response.data.sort((a, b) => b.votes - a.votes);
+      setData(sortedData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -50,7 +50,6 @@ const Dashboard = () => {
               <td>{item.party}</td>
               <td>{item.votes !== undefined ? item.votes : '-'}</td>
             </tr>
-            
           ))}
         </tbody>
       </table>
