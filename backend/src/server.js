@@ -62,3 +62,103 @@ app.post('/voter-reg/:name/:age/:address/:district/:qualification/:caste/:phoneN
     }
 });
 
+app.post('/candidate-reg/:name/:age/:address/:district/:qualification/:caste/:phoneNum/:party', async (req, res) => {
+    try {
+        // Read parameters from the request
+        const { name, age, address, district, qualification, caste, phoneNum, party } = req.params;
+
+        // Insert data into the database
+        const result = await db.collection('candidate_details').insertOne({
+            name,
+            age,
+            address,
+            district,
+            qualification,
+            caste,
+            phoneNum,
+            party
+        });
+
+        // Return the result as a JSON response
+        res.json(result);
+    } catch (error) {
+        // Handle any errors that may occur
+        console.error('Error occurred:', error);
+        res.status(500).json({ error: 'An error occurred while processing your request.' });
+    }
+});
+
+//fetch the data of candidates
+// app.get('/display-candidate',async(req,res)=>
+//     {
+//         const details=await db.collection("candidate_details").find(
+//             {name:req.params.name},
+//             {party:req.params.party}
+//             ).toArray();
+//         res.json(details);
+//     }
+//     )
+
+// app.get('/display-candidate', async (req, res) => {
+//     try {
+//       const details = await db.collection("candidate_details").find().toArray();
+//       res.json(details);
+//     } catch (error) {
+//       console.error("Error fetching data:", error);
+//       res.status(500).send("Error fetching data");
+//     }
+//   });
+
+app.get('/display-candidate', async (req, res) => {
+    const { name, party } = req.query;
+    const query = {};
+    if (name) query.name = name;
+    if (party) query.party = party;
+    
+    try {
+      const details = await db.collection("candidate_details").find(query).toArray();
+      res.json(details);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      res.status(500).send("Error fetching data");
+    }
+  });
+
+  app.get('/dashboard', async (req, res) => {
+    const { name, party } = req.query;
+    const query = {};
+    if (name) query.name = name;
+    if (party) query.party = party;
+
+    try {
+      const details = await db.collection("candidate_details").find(query).toArray();
+      res.json(details);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      res.status(500).send("Error fetching data");
+    }
+  });
+
+
+
+  //vote to increment count 
+  app.post('/vote', async (req, res) => {
+    const { name } = req.body;
+  
+    try {
+      const result = await db.collection("candidate_details").updateOne(
+        { name: name },
+        { $inc: { votes: 1 } }
+      );
+  
+      if (result.modifiedCount === 1) {
+        res.status(200).send("Vote registered successfully");
+      } else {
+        res.status(404).send("Candidate not found");
+      }
+    } catch (error) {
+      console.error("Error updating vote count:", error);
+      res.status(500).send("Error updating vote count");
+    }
+  });
+  

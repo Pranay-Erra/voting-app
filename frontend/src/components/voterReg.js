@@ -1,46 +1,111 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
-import firebase from "./firebase";
-const Votereg=()=>{
-const [n, setN] = useState('');
-const [a, setA] = useState('');
-const [b, setB] = useState('');
-const [c, setC] = useState('');
-const [d, setD] = useState('');
-const [e, setE] = useState('');
-const [f, setF] = useState('');
-const [g, setG] = useState('');
-const [otpVisible,setotpVisible]=useState('');
-const [o,setO]=useState('');
-const nav=useNavigate();
-const handleSubmit= async() => {
-    const  response = await axios.post("http://localhost:8000/voter-reg/"+a+"/"+b+"/"+c+"/"+d+"/"+e+"/"+f+"/"+g+"/"+n);
-    console.log(response.data);
+import axios from "axios";
+
+const Votereg = () => {
+    // State variables
+    const [name, setName] = useState("");
+    const [age, setAge] = useState("");
+    const [address, setAddress] = useState("");
+    const [district, setDistrict] = useState("");
+    const [qualification, setQualification] = useState("");
+    const [caste, setCaste] = useState("");
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
+    const [nri, setNri] = useState("");
+    const [otpVisible, setOtpVisible] = useState(false);
+    const [otpVal, setOtpVal] = useState("");
     
-  };
-    const handleSendOtp=()=>{
-        return(
-            setotpVisible(true)
-        )
+    // useNavigate hook
+    const navigate = useNavigate();
+
+    // Load the smtp.js script
+    useEffect(() => {
+        const script = document.createElement("script");
+        script.src = "https://smtpjs.com/v3/smtp.js";
+        script.async = true;
+        document.head.appendChild(script);
+        
+        // Cleanup function
+        return () => {
+            document.head.removeChild(script);
+        };
+    }, []);
+
+    // Function to handle form submission
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post(
+                `http://localhost:8000/voter-reg/${name}/${age}/${address}/${district}/${qualification}/${caste}/${phone}/${email}/${nri}`
+            );
+            console.log(response.data);
+            // Add navigation if needed
+            // navigate("/next-route");
+        } catch (error) {
+            console.error("Error submitting form:", error);
+        }
+    };
+
+    // Function to send OTP
+    const sendOtp = async () => {
+        // Retrieve the email input from the user
+        const emailInputElement = document.getElementById("email");
+        const email = emailInputElement.value;
+    
+        // Validate the email input
+        if (!email || !validateEmail(email)) {
+            alert("Please enter a valid email address.");
+            return;
+        }
+    
+        const generatedOtp = Math.floor(Math.random() * 10000);
+        setOtpVal(generatedOtp.toString());
+        
+    
+        const emailBody = `<h2>Your OTP is:</h2> ${generatedOtp}`;
+    
+        // Send the OTP using smtp.js
+        window.Email.send({
+            SecureToken: "6a35dbc0-d012-465f-bbc4-4353b813db71",
+            To: email,
+            From: "pranayerra2003@gmail.com",
+            Subject: "Email OTP using JavaScript",
+            Body: emailBody,
+        }).then((message) => {
+            console.log("SMTP.js message response:", message);
+            if (message === "OK") {
+                alert(`OTP sent to your email ${email}`);
+                setOtpVisible(true);
+            } else {
+                alert("Failed to send OTP. Please try again.");
+                console.error("Failed to send OTP. Response:", message);
+            }
+        }).catch((error) => {
+            alert("Failed to send OTP. Please try again.");
+            console.error("SMTP.js error:", error);
+        });
+    };
+    
+    // Function to validate email using a regular expression
+    function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     }
-    //OTP FUNTIONALITY*************************************************************************//
     
-    return(
+    
+    return (
         <>
-        <div>
-            
-                <div id="sign-in-button"></div>
-        <h2>User Information Form</h2>
-            
+            <div>
+                <h2>User Information Form</h2>
+
                 {/* Name */}
-                <label>Name:</label><br />
+                <label htmlFor="name">Name:</label><br />
                 <input
                     type="text"
                     id="name"
                     name="name"
-                    onChange={(f)=>setA(f.target.value)}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                 /><br /><br />
 
@@ -50,7 +115,8 @@ const handleSubmit= async() => {
                     type="number"
                     id="age"
                     name="age"
-                    onChange={(g)=>setB(g.target.value)}
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
                     required
                 /><br /><br />
 
@@ -59,7 +125,8 @@ const handleSubmit= async() => {
                 <textarea
                     id="address"
                     name="address"
-                    onChange={(t)=>setC(t.target.value)}
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
                     required
                 /><br /><br />
 
@@ -69,7 +136,8 @@ const handleSubmit= async() => {
                     type="text"
                     id="district"
                     name="district"
-                    onChange={(h)=>setD(h.target.value)}
+                    value={district}
+                    onChange={(e) => setDistrict(e.target.value)}
                     required
                 /><br /><br />
 
@@ -79,7 +147,8 @@ const handleSubmit= async() => {
                     type="text"
                     id="qualification"
                     name="qualification"
-                    onChange={(i)=>setE(i.target.value)}
+                    value={qualification}
+                    onChange={(e) => setQualification(e.target.value)}
                     required
                 /><br /><br />
 
@@ -89,38 +158,63 @@ const handleSubmit= async() => {
                     type="text"
                     id="caste"
                     name="caste"
-                    onChange={(u)=>setF(u.target.value)}
+                    value={caste}
+                    onChange={(e) => setCaste(e.target.value)}
                     required
                 /><br /><br />
-                <form >
+
                 {/* Phone Number */}
                 <label htmlFor="phone">Phone Number:</label><br />
                 <input
                     type="tel"
-                    id="mobile"
-                    name="mobile"
-                    onChange={(p)=>setG(p.target.value)}
+                    id="phone"
+                    name="phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                     required
                 /><br /><br />
-                </form>
-                <form >
+
+                {/* Email */}
+                <label htmlFor="email">Email:</label><br />
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                /><br /><br />
+
                 {/* Send OTP Button */}
-                <button type="button" onClick={handleSendOtp}>Send OTP</button><br /><br />
+                <button type="button" onClick={sendOtp}>Send OTP</button><br /><br />
 
                 {/* OTP Field (conditionally rendered) */}
                 {otpVisible && (
                     <>
-                        <label htmlFor="otp">OTP:</label><br />
-                        <input
-                            type="text"
-                            id="otp"
-                            name="otp"
-                            
-                            required
-                        /><br /><br />
+                        <div className="otpverify">
+                            <input
+                                type="text"
+                                id="otp_inp"
+                                placeholder="Enter the OTP sent to your Email..."
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const inputOtp = document.getElementById("otp_inp").value;
+                                    if (inputOtp === otpVal) {
+                                        alert("OTP verified successfully!");
+                                    } else {
+                                        alert("Invalid OTP. Please try again.");
+                                    }
+                                }}
+                            >
+                                Verify OTP
+                            </button>
+                        </div>
                     </>
                 )}
-                </form>
+
                 {/* NRI (Yes or No) */}
                 <label>NRI:</label><br />
                 <div>
@@ -129,7 +223,7 @@ const handleSubmit= async() => {
                         id="nri_yes"
                         name="nri"
                         value="yes"
-                        onChange={(q)=>setN(q.target.value)}
+                        onChange={(e) => setNri(e.target.value)}
                         required
                     />
                     <label htmlFor="nri_yes">Yes</label><br />
@@ -138,22 +232,22 @@ const handleSubmit= async() => {
                         id="nri_no"
                         name="nri"
                         value="no"
-                        onChange={(q)=>setO(q.target.value)}
+                        onChange={(e) => setNri(e.target.value)}
                         required
                     />
                     <label htmlFor="nri_no">No</label><br /><br />
                 </div>
 
                 {/* Submit Button */}
-                <button type="button" onClick={handleSubmit} >Submit</button>
-                
-        </div>
-
-
+                <button
+                    type="button"
+                    onClick={handleSubmit}
+                >
+                    Submit
+                </button>
+            </div>
         </>
     );
-}
-
-
+};
 
 export default Votereg;
