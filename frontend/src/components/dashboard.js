@@ -50,6 +50,7 @@ const Dashboard = () => {
               <td>{item.party}</td>
               <td>{item.votes !== undefined ? item.votes : '-'}</td>
             </tr>
+            
           ))}
         </tbody>
       </table>
