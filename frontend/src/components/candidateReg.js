@@ -11,12 +11,29 @@ const Candidate_reg=()=>{
     const [caste, setCaste] = useState("");
     const [phone, setPhone] = useState("");
     const [party, setParty] = useState("");
-
+    const [aadhaarNumber, setAadhaarNumber] = useState('');
+    const [error, setError] = useState('');
+  
+    const validateAadhaar = (value) => {
+      const aadhaarRegex = /^\d{12}$/;
+      if (aadhaarRegex.test(value)) {
+        setError('');
+      } else {
+        setError('Aadhaar number must be a 12-digit numeric value.');
+      }
+    };
+  
+    const handleChange = (e) => {
+      const { value } = e.target;
+      setAadhaarNumber(value);
+      validateAadhaar(value);
+    };
+  
 
     const handleSubmit = async () => {
         try {
             const response = await axios.post(
-                `http://localhost:8000/candidate-reg/${name}/${age}/${address}/${district}/${qualification}/${caste}/${phone}/${party}`
+                `http://localhost:8000/candidate-reg/${name}/${age}/${aadhaarNumber}/${address}/${district}/${qualification}/${caste}/${phone}/${party}`
             );
             console.log(response.data);
             // Add navigation if needed
@@ -52,7 +69,17 @@ const Candidate_reg=()=>{
                     onChange={(e) => setAge(e.target.value)}
                     required
                 /><br /><br />
-
+                <div>
+                <label htmlFor="aadhaar">Aadhaar Number:</label>
+                <input
+                    type="text"
+                    id="aadhaar"
+                    value={aadhaarNumber}
+                    onChange={handleChange}
+                    maxLength="12"
+                />
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                </div>
                 {/* Address */}
                 <label htmlFor="address">Address:</label><br />
                 <textarea

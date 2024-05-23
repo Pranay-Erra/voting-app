@@ -5,6 +5,7 @@ import Votereg from './components/voterReg';
 import Display_candidate from './components/displayCandidate';
 import Candidate_reg from './components/candidateReg';
 import Dashboard from './components/dashboard';
+import Login from './components/login';
 
 function App() {
   
@@ -15,6 +16,7 @@ function App() {
         <Route path='/candidate-reg' element={<Candidate_reg/>}/>
         <Route path='/display-candidate' element={<Display_candidate/>}/>
         <Route path='/dashboard' element={<Dashboard/>}/>
+        <Route path='/login' element={<Login/>}/>
         {/* <Route path='/otp-entry' element={<Otpentry/>}/> */}
       </Routes>
     </BrowserRouter>

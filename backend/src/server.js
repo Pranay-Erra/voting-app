@@ -36,15 +36,16 @@ app.get('/',(req,res)=>{
 //     res.json(cred_s)
 // })
 
-app.post('/voter-reg/:name/:age/:address/:district/:qualification/:caste/:phoneNum/:NRI', async (req, res) => {
+app.post('/voter-reg/:name/:age/:aadharNumber/:address/:district/:qualification/:caste/:phoneNum/:NRI', async (req, res) => {
     try {
         // Read parameters from the request
-        const { name, age, address, district, qualification, caste, phoneNum, NRI } = req.params;
+        const { name, age,aadharNumber, address, district, qualification, caste, phoneNum, NRI } = req.params;
 
         // Insert data into the database
         const result = await db.collection('voter_details').insertOne({
             name,
             age,
+            aadharNumber,
             address,
             district,
             qualification,
@@ -62,15 +63,16 @@ app.post('/voter-reg/:name/:age/:address/:district/:qualification/:caste/:phoneN
     }
 });
 
-app.post('/candidate-reg/:name/:age/:address/:district/:qualification/:caste/:phoneNum/:party', async (req, res) => {
+app.post('/candidate-reg/:name/:age/:aadharNumber/:address/:district/:qualification/:caste/:phoneNum/:party', async (req, res) => {
     try {
         // Read parameters from the request
-        const { name, age, address, district, qualification, caste, phoneNum, party } = req.params;
+        const { name, age,aadharNumber ,address, district, qualification, caste, phoneNum, party } = req.params;
 
         // Insert data into the database
         const result = await db.collection('candidate_details').insertOne({
             name,
             age,
+            aadharNumber,
             address,
             district,
             qualification,
@@ -162,3 +164,24 @@ app.get('/display-candidate', async (req, res) => {
     }
   });
   
+
+//login 
+app.get('/login/:name/:aadharNumber/:district',async(req,res)=>
+  {
+      const result=await db.collection('voter_details').findOne(
+      {name:req.params.name,
+      aadharNumber:req.params.aadharNumber,
+      district:req.params.district}
+      );
+      res.json(result)
+  })  
+  
+//fetch
+app.get('/place/:district',async(req,res)=>{
+  const result=await db.collection('voter_details').findOne(
+    {
+      district:req.params.district
+    }
+  )
+  res.json(result);
+})

@@ -15,9 +15,24 @@ const Votereg = () => {
     const [nri, setNri] = useState("");
     const [otpVisible, setOtpVisible] = useState(false);
     const [otpVal, setOtpVal] = useState("");
+    const [aadhaarNumber, setAadhaarNumber] = useState('');
+    const [error, setError] = useState('');
+  
+    const validateAadhaar = (value) => {
+      const aadhaarRegex = /^\d{12}$/;
+      if (aadhaarRegex.test(value)) {
+        setError('');
+      } else {
+        setError('Aadhaar number must be a 12-digit numeric value.');
+      }
+    };
+  
+    const handleChange = (e) => {
+      const { value } = e.target;
+      setAadhaarNumber(value);
+      validateAadhaar(value);
+    };
     
-    // useNavigate hook
-    const navigate = useNavigate();
 
     // Load the smtp.js script
     useEffect(() => {
@@ -36,7 +51,7 @@ const Votereg = () => {
     const handleSubmit = async () => {
         try {
             const response = await axios.post(
-                `http://localhost:8000/voter-reg/${name}/${age}/${address}/${district}/${qualification}/${caste}/${phone}/${email}/${nri}`
+                `http://localhost:8000/voter-reg/${name}/${age}/${aadhaarNumber}/${address}/${district}/${qualification}/${caste}/${phone}/${nri}`
             );
             console.log(response.data);
             // Add navigation if needed
@@ -120,6 +135,17 @@ const Votereg = () => {
                     required
                 /><br /><br />
 
+                <div>
+                <label htmlFor="aadhaar">Aadhaar Number:</label>
+                <input
+                    type="text"
+                    id="aadhaar"
+                    value={aadhaarNumber}
+                    onChange={handleChange}
+                    maxLength="12"
+                />
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                </div>
                 {/* Address */}
                 <label htmlFor="address">Address:</label><br />
                 <textarea
@@ -175,7 +201,7 @@ const Votereg = () => {
                 /><br /><br />
 
                 {/* Email */}
-                <label htmlFor="email">Email:</label><br />
+                {/* <label htmlFor="email">Email:</label><br />
                 <input
                     type="email"
                     id="email"
@@ -183,13 +209,13 @@ const Votereg = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                /><br /><br />
+                /><br /><br /> */}
 
                 {/* Send OTP Button */}
-                <button type="button" onClick={sendOtp}>Send OTP</button><br /><br />
+                {/* <button type="button" onClick={sendOtp}>Send OTP</button><br /><br /> */}
 
                 {/* OTP Field (conditionally rendered) */}
-                {otpVisible && (
+                {/* {otpVisible && (
                     <>
                         <div className="otpverify">
                             <input
@@ -213,7 +239,7 @@ const Votereg = () => {
                             </button>
                         </div>
                     </>
-                )}
+                )} */}
 
                 {/* NRI (Yes or No) */}
                 <label>NRI:</label><br />
