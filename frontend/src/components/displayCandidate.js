@@ -6,14 +6,15 @@ const DisplayCandidate = () => {
   const [name, setName] = useState('');
   const [party, setParty] = useState('');
   const [votedCandidates, setVotedCandidates] = useState(new Set());
-  const [district,setDistrict]=useState('');
-
+  const voterPlace = localStorage.getItem('place'); // Get the voter's place from localStorage
+  
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:8000/display-candidate", {
         params: {
           name,
-          party
+          party,
+          district: voterPlace // Include the voter's place in the request parameters
         }
       });
       console.log(response.data);
@@ -22,29 +23,10 @@ const DisplayCandidate = () => {
       console.error("Error fetching data:", error);
     }
   };
-  //fetching the place
-  const fetchPlace=async()=>{
-    try{
-      const response=await axios.get('http://localhost:8000/place',{
-        params: {
-         district
-        }
-      });
-      console.log('fgh')
-      console.log(response.data);
-      setDistrict(response.data);
-    }catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }
 
   useEffect(() => {
     fetchData();
   }, [name, party]);
-
-  useEffect(()=>{
-    fetchPlace();
-  },[district])
 
   const handleNameChange = (e) => setName(e.target.value);
   const handlePartyChange = (e) => setParty(e.target.value);
@@ -66,7 +48,7 @@ const DisplayCandidate = () => {
   return (
     <>
       <div>
-        <h2>Candidates in {district}</h2>
+        <h2>Candidates in {voterPlace}</h2>
         <label>
           Name:
           <input type="text" value={name} onChange={handleNameChange} />
