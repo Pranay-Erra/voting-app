@@ -17,6 +17,8 @@ const Votereg = () => {
     const [otpVal, setOtpVal] = useState("");
     const [aadhaarNumber, setAadhaarNumber] = useState('');
     const [error, setError] = useState('');
+    const [destination,setDestination]=useState('');
+    const nav=useNavigate();
   
     const validateAadhaar = (value) => {
       const aadhaarRegex = /^\d{12}$/;
@@ -33,6 +35,11 @@ const Votereg = () => {
       validateAadhaar(value);
     };
     
+    const handleDestination = (f) => {
+        const { value } = f.target;
+        setDistrict(value);
+        setDestination('If u r testing app give ur consistuency as 1.Bhimavaram 2.Vizag 3.Anakapalle');
+      };
 
     // Load the smtp.js script
     useEffect(() => {
@@ -54,8 +61,10 @@ const Votereg = () => {
                 `http://localhost:8000/voter-reg/${name}/${age}/${aadhaarNumber}/${address}/${district}/${qualification}/${caste}/${phone}/${nri}`
             );
             console.log(response.data);
-            // Add navigation if needed
-            // navigate("/next-route");
+            if(response.data){
+                
+                nav('/login');
+            }
         } catch (error) {
             console.error("Error submitting form:", error);
         }
@@ -157,16 +166,18 @@ const Votereg = () => {
                 /><br /><br />
 
                 {/* District */}
-                <label htmlFor="district">District:</label><br />
+                <label htmlFor="district">Consistuency:</label><br />
                 <input
                     type="text"
                     id="district"
                     name="district"
                     value={district}
-                    onChange={(e) => setDistrict(e.target.value)}
+                    onChange={handleDestination}
                     required
-                /><br /><br />
-
+                />
+                {destination && <p style={{ color: 'red' }}>{destination}</p>}
+                <br />
+                
                 {/* Qualification */}
                 <label htmlFor="qualification">Qualification:</label><br />
                 <input

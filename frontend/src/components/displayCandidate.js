@@ -6,6 +6,7 @@ const DisplayCandidate = () => {
   const [name, setName] = useState('');
   const [party, setParty] = useState('');
   const [votedCandidates, setVotedCandidates] = useState(new Set());
+  const [showNoCandidatesDialog, setShowNoCandidatesDialog] = useState(false);
   const voterPlace = localStorage.getItem('place'); // Get the voter's place from localStorage
   
   const fetchData = async () => {
@@ -19,6 +20,7 @@ const DisplayCandidate = () => {
       });
       console.log(response.data);
       setData(response.data);
+      setShowNoCandidatesDialog(response.data.length === 0); // Show dialog if no candidates
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -45,6 +47,8 @@ const DisplayCandidate = () => {
     }
   };
 
+  const handleCloseDialog = () => setShowNoCandidatesDialog(false);
+
   return (
     <>
       <div>
@@ -59,6 +63,14 @@ const DisplayCandidate = () => {
         </label>
         <button onClick={fetchData}>Search</button>
       </div>
+      {showNoCandidatesDialog && (
+        <div className="dialog">
+          <p>No candidates found in your constituency.</p>
+          <h3>Grab the opportunity to be the first one!</h3>
+          <button>Candidate Registration</button>
+          <button onClick={handleCloseDialog}>Close</button>
+        </div>
+      )}
       <table>
         <thead>
           <tr>
