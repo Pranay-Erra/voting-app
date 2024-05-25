@@ -10,6 +10,7 @@ import Admin_login from './components/admin/adminLogin';
 import Admin_voter from './components/admin/adminVoter';
 import Admin_candidate from './components/admin/adminCandidate';
 import Admin_home from './components/admin/adminHome';
+import OTPComponent from './components/OTPComponent';
 
 function App() {
   
@@ -25,7 +26,7 @@ function App() {
         <Route path='/admin-voter' element={<Admin_voter/>}/>
         <Route path='/admin-candidates' element={<Admin_candidate/>}/>
         <Route path='/admin-home' element={<Admin_home/>}/>
-        {/* <Route path='/otp-entry' element={<Otpentry/>}/> */}
+        <Route path='/otp-entry' element={<OTPComponent/>}/>
       </Routes>
     </BrowserRouter>
   );
