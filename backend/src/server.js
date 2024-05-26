@@ -144,12 +144,22 @@ app.get('/display-candidate', async (req, res) => {
   if (district) query.district = district;
   try {
     const details = await db.collection("candidates").find(query).toArray();
-    res.json(details);
+
+    // Convert binary data to base64 string
+    const modifiedDetails = details.map(candidate => {
+      if (candidate.partySymbol) {
+        candidate.partySymbol = candidate.partySymbol.toString('base64');
+      }
+      return candidate;
+    });
+
+    res.json(modifiedDetails);
   } catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).send("Error fetching data");
   }
 });
+
 
 app.get('/dashboard', async (req, res) => {
   const { name, party } = req.query;
@@ -205,12 +215,25 @@ app.get('/admin-candidates', async (req, res) => {
         $sort: { _id: 1 }
       }
     ]).toArray();
+
+    // Fetch party symbol data for each candidate
+    for (const group of candidates) {
+      for (const candidate of group.candidates) {
+        const partySymbolData = await db.collection("candidates").findOne(
+          { _id: candidate._id },
+          { projection: { partySymbol: 1 } }
+        );
+        candidate.partySymbol = partySymbolData.partySymbol;
+      }
+    }
+
     res.json(candidates);
   } catch (error) {
     console.error("Error fetching grouped candidates:", error);
     res.status(500).send("Error fetching data");
   }
 });
+
 
 app.delete('/remove-candidate/:id', async (req, res) => {
   const candidateId = req.params.id;
@@ -226,6 +249,9 @@ app.delete('/remove-candidate/:id', async (req, res) => {
     res.status(500).send("Error removing candidate");
   }
 });
+
+
+
 
 app.get('/admin-voter', async (req, res) => {
   try {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+
 const Admin_candidate = () => {
   const [groupedCandidates, setGroupedCandidates] = useState([]);
-
   const fetchCandidates = async () => {
     try {
       const response = await axios.get("http://localhost:8000/admin-candidates");
@@ -32,6 +32,8 @@ const Admin_candidate = () => {
     }
   };
 
+  
+
   return (
     <div>
       <h1>Admin Page</h1>
@@ -43,6 +45,7 @@ const Admin_candidate = () => {
               <tr>
                 <th>Candidate Name</th>
                 <th>Party</th>
+                <th>Party Symbol</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -51,6 +54,11 @@ const Admin_candidate = () => {
                 <tr key={candidate._id}>
                   <td>{candidate.name}</td>
                   <td>{candidate.party}</td>
+                  <td>
+                    {candidate.partySymbol && (
+                      <img src={`data:image/jpeg;base64,${candidate.partySymbol.toString('base64')}`} alt="Party Symbol" style={{ width: '50px', height: '50px', marginLeft: '10px' }}/>
+                    )}
+                  </td>
                   <td>
                     <button onClick={() => handleRemove(candidate._id)}>Remove</button>
                   </td>

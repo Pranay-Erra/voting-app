@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { sendEmail } from './emailService';
 
 const EmailForm = () => {
   const [email, setEmail] = useState('');
@@ -8,20 +9,25 @@ const EmailForm = () => {
 
   const sendEmail = async () => {
     try {
-      const response = await axios.post('https://api.elasticemail.com/v2/email/send', {
-        apiKey: 'DD4019C72EAAB3C46F497E2E4A5957DD0E0C13163B091143116CFED06158DC3B2845BDDE06289DA2923D6A66BD73475F',
+      const payload = {
+        apiKey: 'DD4019C72EAAB3C46F497E2E4A5957DD0E0C13163B091143116CFED06158DC3B2845BDDE06289DA2923D6A66BD73475F', // Update with your new API key
         to: email,
         subject: subject,
         bodyHtml: body,
         from: 'pranayerra2003@email.com', // Change to your email address
         fromName: 'Pranay', // Change to your name
-      });
-
+      };
+  
+      console.log('Sending email with payload:', payload); // Log the payload for debugging
+  
+      const response = await axios.post('https://api.elasticemail.com/v2/email/send', payload);
+  
       console.log('Email sent:', response.data);
     } catch (error) {
       console.error('Error sending email:', error);
     }
   };
+  
 
   return (
     <div>

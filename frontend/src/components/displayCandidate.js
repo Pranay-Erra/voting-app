@@ -76,6 +76,7 @@ const DisplayCandidate = () => {
           <tr>
             <th>Candidate Name</th>
             <th>Party</th>
+            <th>Party Symbol</th>
             <th>Vote or Not</th>
           </tr>
         </thead>
@@ -83,7 +84,18 @@ const DisplayCandidate = () => {
           {data.map((item, index) => (
             <tr key={index}>
               <td>{item.name}</td>
-              <td>{item.party}</td>
+              <td>
+                {item.party}
+              </td>
+              <td>
+                {item.partySymbol && (
+                  <img
+                    src={`data:image/png;base64,${item.partySymbol}`}
+                    alt="Party Symbol"
+                    style={{ width: '50px', height: '50px', marginLeft: '10px' }}
+                  />
+                )}
+              </td>
               <td>
                 {votedCandidates.has(item.name) ? (
                   <button disabled>Voted</button>
