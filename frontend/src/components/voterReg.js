@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Votereg = () => {
-    // State variables
     const [name, setName] = useState("");
     const [age, setAge] = useState("");
     const [address, setAddress] = useState("");
@@ -17,112 +16,124 @@ const Votereg = () => {
     const [otpVal, setOtpVal] = useState("");
     const [aadhaarNumber, setAadhaarNumber] = useState('');
     const [error, setError] = useState('');
-    const [destination,setDestination]=useState('');
-    const nav=useNavigate();
-  
+    const [destination, setDestination] = useState('');
+    const [isOtpVerified, setIsOtpVerified] = useState(false);
+    const [isOtpSent, setIsOtpSent] = useState(false);
+    const nav = useNavigate();
+
     const validateAadhaar = (value) => {
-      const aadhaarRegex = /^\d{12}$/;
-      if (aadhaarRegex.test(value)) {
-        setError('');
-      } else {
-        setError('Aadhaar number must be a 12-digit numeric value.');
-      }
+        const aadhaarRegex = /^\d{12}$/;
+        if (aadhaarRegex.test(value)) {
+            setError('');
+        } else {
+            setError('Aadhaar number must be a 12-digit numeric value.');
+        }
     };
-  
+
     const handleChange = (e) => {
-      const { value } = e.target;
-      setAadhaarNumber(value);
-      validateAadhaar(value);
+        const { value } = e.target;
+        setAadhaarNumber(value);
+        validateAadhaar(value);
     };
-    
+
     const handleDestination = (f) => {
         const { value } = f.target;
         setDistrict(value);
-        setDestination('If u r testing app give ur consistuency as 1.Bhimavaram 2.Vizag 3.Anakapalle');
-      };
+        setDestination('If you are testing the app, give your constituency as 1. Bhimavaram, 2. Vizag, 3. Anakapalle');
+    };
 
-    // Load the smtp.js script
     useEffect(() => {
         const script = document.createElement("script");
         script.src = "https://smtpjs.com/v3/smtp.js";
         script.async = true;
         document.head.appendChild(script);
-        
-        // Cleanup function
+
         return () => {
             document.head.removeChild(script);
         };
     }, []);
 
-    // Function to handle form submission
+    const sendOtp = () => {
+        const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+        setOtpVal(generatedOtp);
+        setIsOtpSent(true);
+        setOtpVisible(true);
+
+        window.Email.send({
+            SecureToken: "60881F970B376C6B04671E8E399E3868BCA4",
+            To: email,
+            From: "pranayerra2003@gmail.com",
+            Subject: "Your OTP Code",
+            Body: `Your OTP code is ${generatedOtp}`
+        }).then((message) => {
+            console.log("SMTPJS Response:", message); // Add this line to log the response
+            if (message === "OK") {
+                alert("OTP sent successfully");
+            } else {
+                alert("Failed to send OTP");
+                setIsOtpSent(false);
+                setOtpVisible(false);
+            }
+        }).catch((error) => {
+            console.error("Error sending OTP:", error); // Add this line to log the error
+        });
+    };
+
+    // const handleSubmit = async () => {
+    //     if (!isOtpVerified) {
+    //         alert("Please verify the OTP before submitting the form.");
+    //         return;
+    //     }
+    //     try {
+    //         const response = await axios.post(
+    //             `http://localhost:8000/voter-reg/${name}/${age}/${aadhaarNumber}/${address}/${district}/${qualification}/${caste}/${phone}/${email}/${nri}`
+    //         );
+    //         console.log(response.data);
+    //         if (response.data) {
+    //             nav('/login');
+    //         }
+    //     } catch (error) {
+    //         console.error("Error submitting form:", error);
+    //     }
+    // };
     const handleSubmit = async () => {
+        if (!isOtpVerified) {
+            alert("Please verify the OTP before submitting the form.");
+            return;
+        }
         try {
+            const formData = {
+                name,
+                age,
+                aadhaarNumber,
+                address,
+                district,
+                qualification,
+                caste,
+                phone,
+                email,
+                nri
+            };
+    
             const response = await axios.post(
-                `http://localhost:8000/voter-reg/${name}/${age}/${aadhaarNumber}/${address}/${district}/${qualification}/${caste}/${phone}/${nri}`
+                'http://localhost:8000/voter-reg',
+                formData
             );
             console.log(response.data);
-            if(response.data){
-                
+            if (response.data) {
                 nav('/login');
             }
         } catch (error) {
             console.error("Error submitting form:", error);
         }
     };
+    
 
-    // Function to send OTP
-    const sendOtp = async () => {
-        // Retrieve the email input from the user
-        const emailInputElement = document.getElementById("email");
-        const email = emailInputElement.value;
-    
-        // Validate the email input
-        if (!email || !validateEmail(email)) {
-            alert("Please enter a valid email address.");
-            return;
-        }
-    
-        const generatedOtp = Math.floor(Math.random() * 10000);
-        setOtpVal(generatedOtp.toString());
-        
-    
-        const emailBody = `<h2>Your OTP is:</h2> ${generatedOtp}`;
-    
-        // Send the OTP using smtp.js
-        window.Email.send({
-            SecureToken: "6a35dbc0-d012-465f-bbc4-4353b813db71",
-            To: email,
-            From: "pranayerra2003@gmail.com",
-            Subject: "Email OTP using JavaScript",
-            Body: emailBody,
-        }).then((message) => {
-            console.log("SMTP.js message response:", message);
-            if (message === "OK") {
-                alert(`OTP sent to your email ${email}`);
-                setOtpVisible(true);
-            } else {
-                alert("Failed to send OTP. Please try again.");
-                console.error("Failed to send OTP. Response:", message);
-            }
-        }).catch((error) => {
-            alert("Failed to send OTP. Please try again.");
-            console.error("SMTP.js error:", error);
-        });
-    };
-    
-    // Function to validate email using a regular expression
-    function validateEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-    
-    
     return (
         <>
             <div>
                 <h2>User Information Form</h2>
 
-                {/* Name */}
                 <label htmlFor="name">Name:</label><br />
                 <input
                     type="text"
@@ -133,7 +144,6 @@ const Votereg = () => {
                     required
                 /><br /><br />
 
-                {/* Age */}
                 <label htmlFor="age">Age:</label><br />
                 <input
                     type="number"
@@ -145,17 +155,17 @@ const Votereg = () => {
                 /><br /><br />
 
                 <div>
-                <label htmlFor="aadhaar">Aadhaar Number:</label>
-                <input
-                    type="text"
-                    id="aadhaar"
-                    value={aadhaarNumber}
-                    onChange={handleChange}
-                    maxLength="12"
-                />
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+                    <label htmlFor="aadhaar">Aadhaar Number:</label>
+                    <input
+                        type="text"
+                        id="aadhaar"
+                        value={aadhaarNumber}
+                        onChange={handleChange}
+                        maxLength="12"
+                    />
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
                 </div>
-                {/* Address */}
+
                 <label htmlFor="address">Address:</label><br />
                 <textarea
                     id="address"
@@ -165,7 +175,6 @@ const Votereg = () => {
                     required
                 /><br /><br />
 
-                {/* District */}
                 <label htmlFor="district">Consistuency:</label><br />
                 <input
                     type="text"
@@ -177,8 +186,7 @@ const Votereg = () => {
                 />
                 {destination && <p style={{ color: 'red' }}>{destination}</p>}
                 <br />
-                
-                {/* Qualification */}
+
                 <label htmlFor="qualification">Qualification:</label><br />
                 <input
                     type="text"
@@ -189,7 +197,6 @@ const Votereg = () => {
                     required
                 /><br /><br />
 
-                {/* Caste */}
                 <label htmlFor="caste">Caste:</label><br />
                 <input
                     type="text"
@@ -200,7 +207,6 @@ const Votereg = () => {
                     required
                 /><br /><br />
 
-                {/* Phone Number */}
                 <label htmlFor="phone">Phone Number:</label><br />
                 <input
                     type="tel"
@@ -211,8 +217,7 @@ const Votereg = () => {
                     required
                 /><br /><br />
 
-                {/* Email */}
-                {/* <label htmlFor="email">Email:</label><br />
+                <label htmlFor="email">Email:</label><br />
                 <input
                     type="email"
                     id="email"
@@ -220,13 +225,17 @@ const Votereg = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                /><br /><br /> */}
+                /><br /><br />
 
-                {/* Send OTP Button */}
-                {/* <button type="button" onClick={sendOtp}>Send OTP</button><br /><br /> */}
+                <button
+                    type="button"
+                    onClick={sendOtp}
+                    disabled={isOtpSent}
+                >
+                    {isOtpSent ? "OTP Sent" : "Send OTP"}
+                </button><br /><br />
 
-                {/* OTP Field (conditionally rendered) */}
-                {/* {otpVisible && (
+                {otpVisible && (
                     <>
                         <div className="otpverify">
                             <input
@@ -241,6 +250,8 @@ const Votereg = () => {
                                     const inputOtp = document.getElementById("otp_inp").value;
                                     if (inputOtp === otpVal) {
                                         alert("OTP verified successfully!");
+                                        setIsOtpVerified(true);
+                                        setOtpVisible(false);
                                     } else {
                                         alert("Invalid OTP. Please try again.");
                                     }
@@ -250,9 +261,8 @@ const Votereg = () => {
                             </button>
                         </div>
                     </>
-                )} */}
+                )}
 
-                {/* NRI (Yes or No) */}
                 <label>NRI:</label><br />
                 <div>
                     <input
@@ -275,10 +285,10 @@ const Votereg = () => {
                     <label htmlFor="nri_no">No</label><br /><br />
                 </div>
 
-                {/* Submit Button */}
                 <button
                     type="button"
                     onClick={handleSubmit}
+                    disabled={!isOtpVerified}
                 >
                     Submit
                 </button>
