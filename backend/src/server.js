@@ -4,6 +4,7 @@ import { db, connectToDB } from "./db.js";
 import { ObjectId } from 'mongodb';
 import multer from 'multer';
 import mongoose from 'mongoose';
+import nodemailer from 'nodemailer';
 
 const app = express();
 
@@ -20,7 +21,7 @@ app.get('/', (req, res) => {
   res.send("Server Running Successfully ✅");
 });
 
-app.post('/voter-reg/:name/:age/:aadharNumber/:address/:district/:qualification/:caste/:phoneNum/:NRI', async (req, res) => {
+app.post('/voter-reg/:name/:age/:aadharNumber/:address/:district/:qualification/:caste/:phoneNum/:email/:NRI', async (req, res) => {
   try {
     const { name, age, aadharNumber, address, district, qualification, caste, phoneNum, NRI } = req.params;
     const result = await db.collection('voter_details').insertOne({
@@ -32,6 +33,7 @@ app.post('/voter-reg/:name/:age/:aadharNumber/:address/:district/:qualification/
       qualification,
       caste,
       phoneNum,
+      email,
       NRI
     });
     res.json(result);
@@ -295,3 +297,50 @@ app.get('/admin-login/:name/:password', async (req, res) => {
   });
   res.json(result);
 });
+
+
+let otpStore = {}; // Temporary store for OTPs
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+      user: 'pranayerra2003@gmail.com',
+      pass: 'hqia xwbl pzzp zlso'
+  },
+  tls: {
+      rejectUnauthorized: false
+  }
+});
+
+app.post('/send-otp', (req, res) => {
+    const { email } = req.body;
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    otpStore[email] = otp;
+
+    const mailOptions = {
+        from: 'pranayerra2003@gmail.com',
+        to: email,
+        subject: 'Your OTP Code',
+        text: `Your OTP code is ${otp}`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+            res.json({ success: false });
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.json({ success: true });
+        }
+    });
+});
+
+app.post('/verify-otp', (req, res) => {
+    const { email, otp } = req.body;
+    if (otpStore[email] && otpStore[email] == otp) {
+        delete otpStore[email]; // OTP is valid, remove it from store
+        res.json({ success: true });
+    } else {
+        res.json({ success: false });
+    }
+}); 
