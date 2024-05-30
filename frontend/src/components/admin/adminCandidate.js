@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "./adminCandidate.css"; // Ensure to create and import a CSS file for styling
 
-
-const Admin_candidate = () => {
+const AdminCandidate = () => {
   const [groupedCandidates, setGroupedCandidates] = useState([]);
+
   const fetchCandidates = async () => {
     try {
       const response = await axios.get("http://localhost:8000/admin-candidates");
@@ -32,15 +33,13 @@ const Admin_candidate = () => {
     }
   };
 
-  
-
   return (
-    <div>
+    <div className="admin-page">
       <h1>Admin Page</h1>
       {groupedCandidates.map((group, index) => (
-        <div key={index}>
+        <div key={index} className="candidate-group">
           <h2>{group._id}</h2> {/* Place name */}
-          <table>
+          <table className="candidate-table">
             <thead>
               <tr>
                 <th>Candidate Name</th>
@@ -56,11 +55,11 @@ const Admin_candidate = () => {
                   <td>{candidate.party}</td>
                   <td>
                     {candidate.partySymbol && (
-                      <img src={`data:image/jpeg;base64,${candidate.partySymbol.toString('base64')}`} alt="Party Symbol" style={{ width: '50px', height: '50px', marginLeft: '10px' }}/>
+                      <img src={`data:image/jpeg;base64,${candidate.partySymbol.toString('base64')}`} alt="Party Symbol" className="party-symbol" />
                     )}
                   </td>
                   <td>
-                    <button onClick={() => handleRemove(candidate._id)}>Remove</button>
+                    <button className="remove-button" onClick={() => handleRemove(candidate._id)}>Remove</button>
                   </td>
                 </tr>
               ))}
@@ -72,4 +71,4 @@ const Admin_candidate = () => {
   );
 };
 
-export default Admin_candidate;
+export default AdminCandidate;

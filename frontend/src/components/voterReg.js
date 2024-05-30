@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import './voterReg.css'; // Ensure this CSS file contains your styles
 
 const Votereg = () => {
     const [name, setName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [age, setAge] = useState("");
-    const [address, setAddress] = useState("");
-    const [district, setDistrict] = useState("");
-    const [qualification, setQualification] = useState("");
-    const [caste, setCaste] = useState("");
-    const [phone, setPhone] = useState("");
+    const [aadhaarNumber, setAadhaarNumber] = useState('');
+    const [gender, setGender] = useState("");
     const [email, setEmail] = useState("");
-    const [nri, setNri] = useState("");
+    const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
+    const [constituency, setConstituency] = useState("");
+    const [postalCode, setPostalCode] = useState("");
+    const [termsAccepted, setTermsAccepted] = useState(false);
+    const [error, setError] = useState('');
     const [otpVisible, setOtpVisible] = useState(false);
     const [otpInput, setOtpInput] = useState("");
-    const [aadhaarNumber, setAadhaarNumber] = useState('');
-    const [error, setError] = useState('');
-    const [destination, setDestination] = useState('');
     const [isOtpVerified, setIsOtpVerified] = useState(false);
     const [isOtpSent, setIsOtpSent] = useState(false);
     const nav = useNavigate();
@@ -34,12 +35,6 @@ const Votereg = () => {
         const { value } = e.target;
         setAadhaarNumber(value);
         validateAadhaar(value);
-    };
-
-    const handleDestination = (f) => {
-        const { value } = f.target;
-        setDistrict(value);
-        setDestination('If you are testing the app, give your constituency as 1. Bhimavaram, 2. Vizag, 3. Anakapalle');
     };
 
     const sendOtp = async () => {
@@ -80,11 +75,12 @@ const Votereg = () => {
         }
         try {
             const response = await axios.post(
-                `http://localhost:8000/voter-reg`,
-                { name, age, aadhaarNumber, address, district, qualification, caste, phone, email, nri }
+                `http://localhost:8000/voter-reg/${name}/${age}/${aadhaarNumber}/${address}/${constituency}/${phone}/${email}`,
+                { name, lastName, age, aadhaarNumber, address, constituency, phone, email, postalCode, gender, termsAccepted }
             );
             console.log(response.data);
             if (response.data.success) {
+                
                 nav('/login');
             }
         } catch (error) {
@@ -93,157 +89,170 @@ const Votereg = () => {
     };
 
     return (
-        <>
-            <div>
-                <h2>User Information Form</h2>
-
-                <label htmlFor="name">Name:</label><br />
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                /><br /><br />
-
-                <label htmlFor="age">Age:</label><br />
-                <input
-                    type="number"
-                    id="age"
-                    name="age"
-                    value={age}
-                    onChange={(e) => setAge(e.target.value)}
-                    required
-                /><br /><br />
-
-                <div>
-                    <label htmlFor="aadhaar">Aadhaar Number:</label>
+        <div className="wrapper">
+            <div className="title">
+                Registration Form
+            </div>
+            <div className="form">
+                <div className="inputfield">
+                    <label>First Name</label>
                     <input
                         type="text"
-                        id="aadhaar"
+                        className="input"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                    />
+                </div>  
+                <div className="inputfield">
+                    <label>Last Name</label>
+                    <input
+                        type="text"
+                        className="input"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        required
+                    />
+                </div>  
+                <div className="inputfield">
+                    <label>Age</label>
+                    <input
+                        type="number"
+                        className="input"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                        required
+                    />
+                </div>  
+                <div className="inputfield">
+                    <label>Aadhaar Number</label>
+                    <input
+                        type="text"
+                        className="input"
                         value={aadhaarNumber}
                         onChange={handleChange}
                         maxLength="12"
+                        required
                     />
                     {error && <p style={{ color: 'red' }}>{error}</p>}
-                </div>
-
-                <label htmlFor="address">Address:</label><br />
-                <textarea
-                    id="address"
-                    name="address"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    required
-                /><br /><br />
-
-                <label htmlFor="district">Consistuency:</label><br />
-                <input
-                    type="text"
-                    id="district"
-                    name="district"
-                    value={district}
-                    onChange={handleDestination}
-                    required
-                />
-                {destination && <p style={{ color: 'red' }}>{destination}</p>}
-                <br />
-
-                <label htmlFor="qualification">Qualification:</label><br />
-                <input
-                    type="text"
-                    id="qualification"
-                    name="qualification"
-                    value={qualification}
-                    onChange={(e) => setQualification(e.target.value)}
-                    required
-                /><br /><br />
-
-                <label htmlFor="caste">Caste:</label><br />
-                <input
-                    type="text"
-                    id="caste"
-                    name="caste"
-                    value={caste}
-                    onChange={(e) => setCaste(e.target.value)}
-                    required
-                /><br /><br />
-
-                <label htmlFor="phone">Phone Number:</label><br />
-                <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                /><br /><br />
-
-                <label htmlFor="email">Email:</label><br />
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                /><br /><br />
-
-                <button
-                    type="button"
-                    onClick={sendOtp}
-                    disabled={isOtpSent}
-                >
-                    Send OTP
-                </button><br /><br />
-
-                {otpVisible && (
-                    <>
-                        <label htmlFor="otp">Enter OTP:</label><br />
-                        <input
-                            type="text"
-                            id="otp"
-                            name="otp"
-                            value={otpInput}
-                            onChange={(e) => setOtpInput(e.target.value)}
+                </div> 
+                <div className="inputfield">
+                    <label>Gender</label>
+                    <div className="custom_select">
+                        <select
+                            value={gender}
+                            onChange={(e) => setGender(e.target.value)}
                             required
-                        /><br /><br />
-                        <button type="button" onClick={verifyOtp}>Verify OTP</button><br /><br />
+                        >
+                            <option value="">Select</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div> 
+                <div className="inputfield">
+                    <label>Email Address</label>
+                    <input
+                        type="email"
+                        className="input"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div> 
+                <div className="inputfield">
+                    <label>Phone Number</label>
+                    <input
+                        type="text"
+                        className="input"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        required
+                    />
+                </div> 
+                <div className="inputfield">
+                    <label>Address</label>
+                    <textarea
+                        className="textarea"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        required
+                    ></textarea>
+                </div> 
+                <div className="inputfield">
+                    <label>Constituency</label>
+                    <input
+                        type="text"
+                        className="input"
+                        value={constituency}
+                        onChange={(e) => setConstituency(e.target.value)}
+                        required
+                    />
+                </div> 
+                <div className="inputfield">
+                    <label>Postal Code</label>
+                    <input
+                        type="number"
+                        className="input"
+                        value={postalCode}
+                        onChange={(e) => setPostalCode(e.target.value)}
+                        required
+                    />
+                </div> 
+                <div className="inputfield terms">
+                    <label className="check">
+                        <input
+                            type="checkbox"
+                            checked={termsAccepted}
+                            onChange={(e) => setTermsAccepted(e.target.checked)}
+                            required
+                        />
+                        <span className="checkmark"></span>
+                    </label>
+                    <p>Agreed to terms and conditions</p>
+                </div> 
+                <div className="inputfield">
+                    <input
+                        type="button"
+                        value="Register"
+                        className="btn"
+                        onClick={handleSubmit}
+                    />
+                </div>
+                {isOtpSent && (
+                    <>
+                        <div className="inputfield">
+                            <label htmlFor="otp">Enter OTP:</label>
+                            <input
+                                type="text"
+                                className="input"
+                                id="otp"
+                                value={otpInput}
+                                onChange={(e) => setOtpInput(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="inputfield">
+                            <input
+                                type="button"
+                                value="Verify OTP"
+                                className="btn"
+                                onClick={verifyOtp}
+                            />
+                        </div>
                     </>
                 )}
-
-                <label>NRI:</label><br />
-                <div>
+                <div className="inputfield">
                     <input
-                        type="radio"
-                        id="nri_yes"
-                        name="nri"
-                        value="yes"
-                        onChange={(e) => setNri(e.target.value)}
-                        required
+                        type="button"
+                        value="Send OTP"
+                        className="btn"
+                        onClick={sendOtp}
+                        disabled={isOtpSent}
                     />
-                    <label htmlFor="nri_yes">Yes</label><br />
-                    <input
-                        type="radio"
-                        id="nri_no"
-                        name="nri"
-                        value="no"
-                        onChange={(e) => setNri(e.target.value)}
-                        required
-                    />
-                    <label htmlFor="nri_no">No</label><br /><br />
                 </div>
-
-                <button
-                    type="button"
-                    onClick={handleSubmit}
-                    disabled={!isOtpVerified}
-                >
-                    Submit
-                </button>
             </div>
-        </>
+        </div>
     );
 };
 

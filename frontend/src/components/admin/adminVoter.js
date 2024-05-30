@@ -1,43 +1,66 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "./adminVoter.css"; // Import CSS file for styling
 
-const Admin_voter = () => {
-  const [groupedCandidates, setGroupedCandidates] = useState([]);
+const AdminVoter = () => {
+  const [groupedVoters, setGroupedVoters] = useState([]);
+  const [loading, setLoading] = useState(true); // To handle loading state
+  const [error, setError] = useState(null); // To handle error state
 
-  const fetchCandidates = async () => {
+  const fetchVoters = async () => {
+    setLoading(true);
     try {
       const response = await axios.get("http://localhost:8000/admin-voter");
-      setGroupedCandidates(response.data);
+      console.log("Full API Response:", response.data); // Log the full API response
+      setGroupedVoters(response.data);
+      setError(null);
     } catch (error) {
       console.error("Error fetching grouped candidates:", error);
+      setError("Failed to fetch voters.");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCandidates();
+    fetchVoters();
   }, []);
 
   const handleRemove = async (VoterId) => {
     try {
       const response = await axios.delete(`http://localhost:8000/remove-voter/${VoterId}`);
       if (response.status === 200) {
-        alert('Candidate removed successfully');
-        fetchCandidates(); // Refresh the list after removal
+        alert('Voter removed successfully');
+        fetchVoters(); // Refresh the list after removal
       } else {
-        alert('Failed to remove candidate');
+        alert('Failed to remove voter');
       }
     } catch (error) {
-      console.error("Error removing candidate:", error);
-      alert('Error removing candidate');
+      console.error("Error removing voter:", error);
+      alert('Error removing voter');
     }
   };
 
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
+
+  if (!Array.isArray(groupedVoters)) {
+    console.error("groupedVoters is not an array:", groupedVoters);
+    return <div className="error">Error: Data format is incorrect.</div>;
+  }
+
   return (
-    <div>
-      <h1>Admin voter</h1>
-      {groupedCandidates.map((group, index) => (
-        <div key={index}>
-          <h2>{group._id}</h2> {/* Place name */}
+    <div className="admin-voter-container">
+      <h1>Admin Voter</h1>
+      {groupedVoters.length > 0 ? groupedVoters.map((group, index) => (
+        <div key={index} className="voter-group">
+          <h2>{group._id}</h2> {/* Use "constituency" as the key */}
+          {/* Render candidates instead of voters */}
           <table>
             <thead>
               <tr>
@@ -46,20 +69,26 @@ const Admin_voter = () => {
               </tr>
             </thead>
             <tbody>
-              {group.candidates.map((candidate) => (
-                <tr key={candidate._id}>
-                  <td>{candidate.name}</td>
-                  <td>
-                    <button onClick={() => handleRemove(candidate._id)}>Remove</button>
-                  </td>
+              {Array.isArray(group.candidates) && group.candidates.length > 0 ? (
+                group.candidates.map((candidate, idx) => (
+                  <tr key={candidate._id}>
+                    <td>{candidate.name}</td>
+                    <td>
+                      <button onClick={() => handleRemove(candidate._id)}>Remove</button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="2">No voters available</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
-      ))}
+      )) : <div>No voters found.</div>}
     </div>
   );
 };
 
-export default Admin_voter;
+export default AdminVoter;

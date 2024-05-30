@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "./displayCandidate.css"; // Ensure to create and import a CSS file for styling
 
 const DisplayCandidate = () => {
   const [data, setData] = useState([]);
@@ -15,7 +16,7 @@ const DisplayCandidate = () => {
         params: {
           name,
           party,
-          district: voterPlace // Include the voter's place in the request parameters
+          constituency: voterPlace // Include the voter's place in the request parameters
         }
       });
       console.log(response.data);
@@ -51,27 +52,27 @@ const DisplayCandidate = () => {
 
   return (
     <>
-      <div>
+      <div className="search-container">
         <h2>Candidates in {voterPlace}</h2>
         <label>
           Name:
-          <input type="text" value={name} onChange={handleNameChange} />
+          <input type="text" className="input" value={name} onChange={handleNameChange} />
         </label>
         <label>
           Party:
-          <input type="text" value={party} onChange={handlePartyChange} />
+          <input type="text" className="input" value={party} onChange={handlePartyChange} />
         </label>
-        <button onClick={fetchData}>Search</button>
+        <button className="search-button" onClick={fetchData}>Search</button>
       </div>
       {showNoCandidatesDialog && (
         <div className="dialog">
           <p>No candidates found in your constituency.</p>
           <h3>Grab the opportunity to be the first one!</h3>
-          <button>Candidate Registration</button>
-          <button onClick={handleCloseDialog}>Close</button>
+          <button className="dialog-button">Candidate Registration</button>
+          <button className="dialog-button" onClick={handleCloseDialog}>Close</button>
         </div>
       )}
-      <table>
+      <table className="data-table">
         <thead>
           <tr>
             <th>Candidate Name</th>
@@ -84,23 +85,21 @@ const DisplayCandidate = () => {
           {data.map((item, index) => (
             <tr key={index}>
               <td>{item.name}</td>
-              <td>
-                {item.party}
-              </td>
+              <td>{item.party}</td>
               <td>
                 {item.partySymbol && (
                   <img
                     src={`data:image/png;base64,${item.partySymbol}`}
                     alt="Party Symbol"
-                    style={{ width: '50px', height: '50px', marginLeft: '10px' }}
+                    className="party-symbol"
                   />
                 )}
               </td>
               <td>
                 {votedCandidates.has(item.name) ? (
-                  <button disabled>Voted</button>
+                  <button className="vote-button" disabled>Voted</button>
                 ) : (
-                  <button onClick={() => handleVote(item.name)}>Vote</button>
+                  <button className="vote-button" onClick={() => handleVote(item.name)}>Vote</button>
                 )}
               </td>
             </tr>

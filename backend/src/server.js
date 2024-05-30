@@ -21,60 +21,91 @@ app.get('/', (req, res) => {
   res.send("Server Running Successfully ✅");
 });
 
-app.post('/voter-reg/:name/:age/:aadharNumber/:address/:district/:qualification/:caste/:phoneNum/:email/:NRI', async (req, res) => {
+// app.post('/voter-reg/:name/:age/:aadharNumber/:address/:district/:qualification/:caste/:phoneNum/:email/:NRI', async (req, res) => {
+//   try {
+//     const { name, age, aadharNumber, address, district, qualification, caste, phoneNum, NRI } = req.params;
+//     const result = await db.collection('voter_details').insertOne({
+//       name,
+//       age,
+//       aadharNumber,
+//       address,
+//       district,
+//       qualification,
+//       caste,
+//       phoneNum,
+//       email,
+//       NRI
+//     });
+//     res.json(result);
+//   } catch (error) {
+//     console.error('Error occurred:', error);
+//     res.status(500).json({ error: 'An error occurred while processing your request.' });
+//   }
+// });
+
+app.post('/voter-reg/:name/:age/:aadhaarNumber/:address/:constituency/:phone/:email', async (req, res) => {
   try {
-    const { name, age, aadharNumber, address, district, qualification, caste, phoneNum, NRI } = req.params;
+    const { name, age, aadhaarNumber, address, constituency, phone, email } = req.params;
+    const { lastName, postalCode, gender, termsAccepted } = req.body;
     const result = await db.collection('voter_details').insertOne({
       name,
+      lastName,
       age,
-      aadharNumber,
+      aadhaarNumber,
       address,
-      district,
-      qualification,
-      caste,
-      phoneNum,
+      constituency,
+      phone,
       email,
-      NRI
+      postalCode,
+      gender,
+      termsAccepted
     });
-    res.json(result);
+    res.json({ success: true, data: result });
   } catch (error) {
     console.error('Error occurred:', error);
     res.status(500).json({ error: 'An error occurred while processing your request.' });
   }
 });
 
-const candidateSchema = new mongoose.Schema({
-  name: String,
-  age: Number,
-  aadhaarNumber: String,
-  address: String,
-  district: String,
-  qualification: String,
-  caste: String,
-  phone: String,
-  party: String,
-  partySymbol: Buffer,
-});
 
-const Candidate = mongoose.model('Candidate', candidateSchema);
+// const candidateSchema = new mongoose.Schema({
+//   name: String,
+//   age: Number,
+//   aadhaarNumber: String,
+//   address: String,
+//   district: String,
+//   qualification: String,
+//   caste: String,
+//   phone: String,
+//   party: String,
+//   partySymbol: Buffer,
+// });
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+// const Candidate = mongoose.model('Candidate', candidateSchema);
+
+// const storage = multer.memoryStorage();
+// const upload = multer({ storage });
+
 
 // app.post('/candidate-reg', upload.single('partySymbol'), async (req, res) => {
 //   try {
+//     // Request body parameters
 //     const { name, age, aadhaarNumber, address, district, qualification, caste, phone, party } = req.body;
-    
+
+//     // Check if all fields are provided
 //     if (!name || !age || !aadhaarNumber || !address || !district || !qualification || !caste || !phone || !party) {
 //       return res.status(400).send('All fields are required');
 //     }
 
+//     // Check if party symbol image is provided
 //     if (!req.file) {
 //       return res.status(400).send('Party symbol image is required');
 //     }
 
+//     // Retrieve party symbol from request buffer
 //     const partySymbol = req.file.buffer;
 
+//     // Create new Candidate document using Mongoose model
 //     const candidate = new Candidate({
 //       name,
 //       age,
@@ -88,6 +119,7 @@ const upload = multer({ storage });
 //       partySymbol,
 //     });
 
+//     // Save candidate document to MongoDB
 //     await candidate.save();
 //     res.status(200).send('Candidate registered successfully');
 //   } catch (error) {
@@ -96,39 +128,67 @@ const upload = multer({ storage });
 //   }
 // });
 
+const candidateSchema = new mongoose.Schema({
+  firstName: String,
+  lastName: String,
+  age: Number,
+  aadhaarNumber: String,
+  gender: String,
+  email: String,
+  phone: String,
+  address: String,
+  constituency: String,
+  postalCode: String,
+  party: String,
+  partySymbol: Buffer,
+});
+
+const Candidate = mongoose.model('Candidate', candidateSchema);
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
 app.post('/candidate-reg', upload.single('partySymbol'), async (req, res) => {
   try {
-    // Request body parameters
-    const { name, age, aadhaarNumber, address, district, qualification, caste, phone, party } = req.body;
+    const {
+      name,
+      lastName,
+      age,
+      aadhaarNumber,
+      gender,
+      email,
+      phone,
+      address,
+      constituency,
+      postalCode,
+      party,
+    } = req.body;
 
-    // Check if all fields are provided
-    if (!name || !age || !aadhaarNumber || !address || !district || !qualification || !caste || !phone || !party) {
+    if (!firstName || !lastName || !age || !aadhaarNumber || !gender || !email || !phone || !address || !constituency || !postalCode || !party) {
       return res.status(400).send('All fields are required');
     }
 
-    // Check if party symbol image is provided
     if (!req.file) {
       return res.status(400).send('Party symbol image is required');
     }
 
-    // Retrieve party symbol from request buffer
     const partySymbol = req.file.buffer;
 
-    // Create new Candidate document using Mongoose model
     const candidate = new Candidate({
-      name,
+      firstName,
+      lastName,
       age,
       aadhaarNumber,
-      address,
-      district,
-      qualification,
-      caste,
+      gender,
+      email,
       phone,
+      address,
+      constituency,
+      postalCode,
       party,
       partySymbol,
     });
 
-    // Save candidate document to MongoDB
     await candidate.save();
     res.status(200).send('Candidate registered successfully');
   } catch (error) {
@@ -137,13 +197,12 @@ app.post('/candidate-reg', upload.single('partySymbol'), async (req, res) => {
   }
 });
 
-
 app.get('/display-candidate', async (req, res) => {
-  const { name, party, district } = req.query;
+  const { name, party, constituency } = req.query;
   const query = {};
   if (name) query.name = name;
   if (party) query.party = party;
-  if (district) query.district = district;
+  if (constituency) query.constituency = constituency;
   try {
     const details = await db.collection("candidates").find(query).toArray();
 
@@ -195,11 +254,11 @@ app.post('/vote', async (req, res) => {
   }
 });
 
-app.get('/login/:name/:aadharNumber/:district', async (req, res) => {
+app.get('/login/:name/:aadhaarNumber/:constituency', async (req, res) => {
   const result = await db.collection('voter_details').findOne({
     name: req.params.name,
-    aadharNumber: req.params.aadharNumber,
-    district: req.params.district
+    aadhaarNumber: req.params.aadhaarNumber,
+    constituency: req.params.constituency
   });
   res.json(result);
 });
@@ -209,7 +268,7 @@ app.get('/admin-candidates', async (req, res) => {
     const candidates = await db.collection("candidates").aggregate([
       {
         $group: {
-          _id: "$district",
+          _id: "$constituency",
           candidates: { $push: "$$ROOT" }
         }
       },
@@ -255,13 +314,33 @@ app.delete('/remove-candidate/:id', async (req, res) => {
 
 
 
+// app.get('/admin-voter', async (req, res) => {
+//   try {
+//     const voters = await db.collection("voter_details").aggregate([
+//       {
+//         $group: {
+//           _id: "$constituency",
+//           voters: { $push: "$$ROOT" }
+//         }
+//       },
+//       {
+//         $sort: { _id: 1 }
+//       }
+//     ]).toArray();
+//     res.json(voters);
+//   } catch (error) {
+//     console.error("Error fetching grouped voters:", error);
+//     res.status(500).send("Error fetching data");
+//   }
+// });
+
 app.get('/admin-voter', async (req, res) => {
   try {
     const voters = await db.collection("voter_details").aggregate([
       {
         $group: {
-          _id: "$district",
-          voters: { $push: "$$ROOT" }
+          _id: "$constituency", // Use "constituency" instead of "_id" for grouping
+          candidates: { $push: "$$ROOT" } // Rename "voters" to "candidates" for consistency with frontend
         }
       },
       {
@@ -273,7 +352,10 @@ app.get('/admin-voter', async (req, res) => {
     console.error("Error fetching grouped voters:", error);
     res.status(500).send("Error fetching data");
   }
-});
+})
+
+
+
 
 app.delete('/remove-voter/:id', async (req, res) => {
   const voterId = req.params.id;

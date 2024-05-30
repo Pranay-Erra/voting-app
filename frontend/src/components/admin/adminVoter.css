@@ -1,0 +1,49 @@
+/* AdminVoter.css */
+
+.admin-voter-container {
+    padding: 20px;
+  }
+  
+  .loading {
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .error {
+    color: red;
+    text-align: center;
+  }
+  
+  .voter-group {
+    margin-bottom: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  button {
+    background-color: #4caf50;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  

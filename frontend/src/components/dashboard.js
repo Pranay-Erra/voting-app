@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./dashboard.css";  // Ensure to create and import a CSS file for styling
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -24,18 +25,28 @@ const Dashboard = () => {
 
   return (
     <>
-      <div>
+      <div className="search-fields">
         <label>
           Name:
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <input
+            type="text"
+            className="input"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </label>
         <label>
           Party:
-          <input type="text" value={party} onChange={(e) => setParty(e.target.value)} />
+          <input
+            type="text"
+            className="input"
+            value={party}
+            onChange={(e) => setParty(e.target.value)}
+          />
         </label>
-        <button onClick={fetchData}>Search</button>
+        <button className="search-button" onClick={fetchData}>Search</button>
       </div>
-      <table>
+      <table className="data-table">
         <thead>
           <tr>
             <th>Candidate Name</th>

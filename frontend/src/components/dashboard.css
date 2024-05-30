@@ -1,0 +1,55 @@
+/* CSS for input fields */
+.search-fields {
+    margin: 20px 0;
+  }
+  
+  .search-fields label {
+    margin-right: 10px;
+  }
+  
+  .input {
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .search-button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .search-button:hover {
+    background-color: #45a049;
+  }
+  
+  /* CSS for table */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .data-table th, .data-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .data-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .data-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .data-table tr:hover {
+    background-color: #ddd;
+  }
+  
