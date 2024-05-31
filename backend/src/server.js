@@ -129,7 +129,7 @@ app.post('/voter-reg/:name/:age/:aadhaarNumber/:address/:constituency/:phone/:em
 // });
 
 const candidateSchema = new mongoose.Schema({
-  firstName: String,
+  name: String,
   lastName: String,
   age: Number,
   aadhaarNumber: String,
@@ -164,7 +164,7 @@ app.post('/candidate-reg', upload.single('partySymbol'), async (req, res) => {
       party,
     } = req.body;
 
-    if (!firstName || !lastName || !age || !aadhaarNumber || !gender || !email || !phone || !address || !constituency || !postalCode || !party) {
+    if (!name || !lastName || !age || !aadhaarNumber || !gender || !email || !phone || !address || !constituency || !postalCode || !party) {
       return res.status(400).send('All fields are required');
     }
 
@@ -175,7 +175,7 @@ app.post('/candidate-reg', upload.single('partySymbol'), async (req, res) => {
     const partySymbol = req.file.buffer;
 
     const candidate = new Candidate({
-      firstName,
+      name,
       lastName,
       age,
       aadhaarNumber,
