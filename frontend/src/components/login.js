@@ -75,7 +75,7 @@ const Login = () => {
           />
           <label>Name of Constituency</label>
         </div>
-        <button type="button" onClick={handleSubmit}>Login</button>
+        <button className="login-button" type="button" onClick={handleSubmit}>Login</button>
       </form>
     </div>
   );

@@ -1,55 +1,116 @@
-/* CSS for input fields */
+/* General styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Container for search fields */
 .search-fields {
-    margin: 20px 0;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-fields label {
+  margin-right: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.input {
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 200px;
+}
+
+.search-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #45a049;
+}
+
+/* Table styling */
+.data-table {
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.data-table th, .data-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.data-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.data-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.data-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+th:first-child, td:first-child {
+  border-left: none;
+}
+
+th:last-child, td:last-child {
+  border-right: none;
+}
+
+td:last-child {
+  border-bottom: none;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .search-fields {
+      flex-direction: column;
+      align-items: flex-start;
   }
-  
-  .search-fields label {
-    margin-right: 10px;
+
+  .search-fields label, .input, .search-button {
+      margin-bottom: 10px;
   }
-  
-  .input {
-    padding: 8px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .search-button {
-    padding: 8px 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .search-button:hover {
-    background-color: #45a049;
-  }
-  
-  /* CSS for table */
-  .data-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
+
   .data-table th, .data-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
+      padding: 8px;
   }
-  
-  .data-table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
+
+  .input {
+      width: 100%;
   }
-  
-  .data-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .data-table tr:hover {
-    background-color: #ddd;
-  }
-  
+}
