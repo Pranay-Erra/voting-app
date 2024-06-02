@@ -6,16 +6,16 @@
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
 }
-body{
+/* body{
   background: #fec107;
   padding: 0 10px;
-}
+} */
 .wrapper{
   max-width: 500px;
   width: 100%;
   background: #fff;
   margin: 50px auto;
-  box-shadow: 2px 2px 4px rgba(0,0,0,0.125);
+  box-shadow: 12px 12px 40px rgba(6, 6, 6, 0.125);
   padding: 30px;
 }
 
