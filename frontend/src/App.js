@@ -10,6 +10,7 @@ import Admin_login from './components/admin/adminLogin';
 import Admin_voter from './components/admin/adminVoter';
 import Admin_candidate from './components/admin/adminCandidate';
 import Admin_home from './components/admin/adminHome';
+import Home from './Home';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path='/' element={<Home/>}/>
         <Route path='/voter-reg' element={<Votereg/>}/>
         <Route path='/candidate-reg' element={<Candidate_reg/>}/>
         <Route path='/display-candidate' element={<Display_candidate/>}/>

@@ -236,32 +236,74 @@ app.get('/dashboard', async (req, res) => {
   }
 });
 
-app.post('/vote', async (req, res) => {
-  const { name } = req.body;
-  try {
-    const result = await db.collection("candidates").updateOne(
-      { name: name },
-      { $inc: { votes: 1 } }
-    );
-    if (result.modifiedCount === 1) {
-      res.status(200).send("Vote registered successfully");
-    } else {
-      res.status(404).send("Candidate not found");
+  app.post('/vote', async (req, res) => {
+    const { name } = req.body;
+    try {
+      const result = await db.collection("candidates").updateOne(
+        { name: name },
+        { $inc: { votes: 1 } }
+      );
+      if (result.modifiedCount === 1) {
+        res.status(200).send("Vote registered successfully");
+      } else {
+        res.status(404).send("Candidate not found");
+      }
+    } catch (error) {
+      console.error("Error updating vote count:", error);
+      res.status(500).send("Error updating vote count");
     }
+  });
+
+// app.get('/login/:name/:aadhaarNumber/:constituency', async (req, res) => {
+//   const result = await db.collection('voter_details').findOne({
+//     name: req.params.name,
+//     aadhaarNumber: req.params.aadhaarNumber,
+//     constituency: req.params.constituency
+//   });
+//   res.json(result);
+// });
+
+app.get('/login/:name/:aadhaarNumber/:constituency', async (req, res) => {
+  try {
+    const result = await db.collection('voter_details').findOne({
+      name: req.params.name,
+      aadhaarNumber: req.params.aadhaarNumber,
+      constituency: req.params.constituency
+    });
+    res.json(result);
   } catch (error) {
-    console.error("Error updating vote count:", error);
-    res.status(500).send("Error updating vote count");
+    console.error('Error during login:', error);
+    res.status(500).json({ error: 'An error occurred during login' });
   }
 });
 
-app.get('/login/:name/:aadhaarNumber/:constituency', async (req, res) => {
-  const result = await db.collection('voter_details').findOne({
-    name: req.params.name,
-    aadhaarNumber: req.params.aadhaarNumber,
-    constituency: req.params.constituency
-  });
-  res.json(result);
+
+app.post('/voteCount/:voterId', async (req, res) => {
+  const voterId = req.params.voterId;
+  try {
+    // Check if voterId is a valid ObjectId
+    if (!ObjectId.isValid(voterId)) {
+      return res.status(400).json({ error: 'Invalid voter ID format' });
+    }
+
+    const result = await db.collection('voter_details').findOneAndUpdate(
+      { _id: new ObjectId(voterId) },
+      { $inc: { vote: 1 } },
+      { returnOriginal: false }
+    );
+
+    if (result.value) {
+      res.status(200).json(result.value);
+    } else {
+      console.log(`Voter not found: ${voterId}`);
+      res.status(404).json({ error: 'Voter not found' });
+    }
+  } catch (error) {
+    console.error("Error updating vote count:", error);
+    res.status(500).json({ error: 'Error updating vote count' });
+  }
 });
+
 
 app.get('/admin-candidates', async (req, res) => {
   try {
@@ -426,3 +468,5 @@ app.post('/verify-otp', (req, res) => {
         res.json({ success: false });
     }
 }); 
+
+
