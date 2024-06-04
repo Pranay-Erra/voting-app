@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import './candidateReg.css';
 
 const CandidateReg = () => {
@@ -63,15 +65,16 @@ const CandidateReg = () => {
         }
       );
       console.log(response.data);
-      alert("Candidate registered successfully");
+      toast.success("Candidate registered successfully");
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Error submitting form");
+      toast.error("Error submitting form");
     }
   };
 
   return (
     <div className="wrapper">
+      <ToastContainer />
       <div className="title">Candidate Registration Form</div>
       <form className="form" onSubmit={handleSubmit}>
         {/* First Name */}

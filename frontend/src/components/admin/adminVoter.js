@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import "./adminVoter.css"; // Import CSS file for styling
 
 const AdminVoter = () => {
@@ -30,14 +32,14 @@ const AdminVoter = () => {
     try {
       const response = await axios.delete(`http://localhost:8000/remove-voter/${VoterId}`);
       if (response.status === 200) {
-        alert('Voter removed successfully');
+        toast.success('Voter removed successfully');
         fetchVoters(); // Refresh the list after removal
       } else {
-        alert('Failed to remove voter');
+        toast.error('Failed to remove voter');
       }
     } catch (error) {
       console.error("Error removing voter:", error);
-      alert('Error removing voter');
+      toast.error('Error removing voter');
     }
   };
 
@@ -56,6 +58,7 @@ const AdminVoter = () => {
 
   return (
     <div className="admin-voter-container">
+      <ToastContainer />
       <h1>Admin Voter</h1>
       {groupedVoters.length > 0 ? groupedVoters.map((group, index) => (
         <div key={index} className="voter-group">

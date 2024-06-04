@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import "./adminLogin.css"; // Import CSS file for styling
 
 const AdminLogin = () => {
@@ -13,18 +15,22 @@ const AdminLogin = () => {
       const response = await axios.get(`http://localhost:8000/admin-login/${name}/${password}`);
       console.log(response.data);
       if (response.data) {
-        nav('/admin-home')
+        toast.success("Login successful");
+        setTimeout(() => {
+          nav('/admin-home');
+        }, 4000); // Delay to allow the toast to be seen before navigation
       } else {
-        alert("Login failed");
+        toast.error("Login failed");
       }
     } catch (error) {
       console.error("Error during login", error);
-      alert("An error occurred during login");
+      toast.error("An error occurred during login");
     }
   };
 
   return (
     <div className="login-box">
+      <ToastContainer />
       <h2>Login</h2>
       <form>
         <div className="user-box">

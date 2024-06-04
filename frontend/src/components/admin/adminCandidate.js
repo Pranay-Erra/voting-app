@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import "./adminCandidate.css"; // Ensure to create and import a CSS file for styling
 
 const AdminCandidate = () => {
@@ -22,19 +24,20 @@ const AdminCandidate = () => {
     try {
       const response = await axios.delete(`http://localhost:8000/remove-candidate/${candidateId}`);
       if (response.status === 200) {
-        alert('Candidate removed successfully');
+        toast.success('Candidate removed successfully');
         fetchCandidates(); // Refresh the list after removal
       } else {
-        alert('Failed to remove candidate');
+        toast.error('Failed to remove candidate');
       }
     } catch (error) {
       console.error("Error removing candidate:", error);
-      alert('Error removing candidate');
+      toast.error('Error removing candidate');
     }
   };
 
   return (
     <div className="admin-page">
+      <ToastContainer />
       <h1>Admin Page</h1>
       {groupedCandidates.map((group, index) => (
         <div key={index} className="candidate-group">

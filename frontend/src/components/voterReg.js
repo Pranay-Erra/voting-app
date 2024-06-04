@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import './voterReg.css'; // Ensure this CSS file contains your styles
 
 const Votereg = () => {
@@ -43,13 +45,13 @@ const Votereg = () => {
             if (response.data.success) {
                 setIsOtpSent(true);
                 setOtpVisible(true);
-                alert('OTP sent successfully');
+                toast.success('OTP sent successfully');
             } else {
-                alert('Failed to send OTP');
+                toast.error('Failed to send OTP');
             }
         } catch (error) {
             console.error("Error sending OTP:", error);
-            alert('Failed to send OTP');
+            toast.error('Failed to send OTP');
         }
     };
 
@@ -58,19 +60,19 @@ const Votereg = () => {
             const response = await axios.post('http://localhost:8000/verify-otp', { email, otp: otpInput });
             if (response.data.success) {
                 setIsOtpVerified(true);
-                alert('OTP verified successfully');
+                toast.success('OTP verified successfully');
             } else {
-                alert('Invalid OTP');
+                toast.error('Invalid OTP');
             }
         } catch (error) {
             console.error("Error verifying OTP:", error);
-            alert('Failed to verify OTP');
+            toast.error('Failed to verify OTP');
         }
     };
 
     const handleSubmit = async () => {
         if (!isOtpVerified) {
-            alert("Please verify the OTP before submitting the form.");
+            toast.warn("Please verify the OTP before submitting the form.");
             return;
         }
         try {
@@ -80,16 +82,18 @@ const Votereg = () => {
             );
             console.log(response.data);
             if (response.data.success) {
-                
                 nav('/login');
+                toast.success('Registration successful');
             }
         } catch (error) {
             console.error("Error submitting form:", error);
+            toast.error('Error submitting form');
         }
     };
 
     return (
         <div className="wrapper">
+            <ToastContainer />
             <div className="title">
                 Registration Form
             </div>
@@ -250,6 +254,9 @@ const Votereg = () => {
                         onClick={sendOtp}
                         disabled={isOtpSent}
                     />
+                </div>
+                <div className="inputfield">
+                    <p>Already registered? <a href="/login">Sign in</a></p>
                 </div>
             </div>
         </div>

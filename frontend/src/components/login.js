@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import './login.css'; // Assuming you have CSS for the template
 
 const Login = () => {
@@ -26,23 +28,29 @@ const Login = () => {
   };
 
   const handleSubmit = async () => {
+    if (error) {
+      toast.error(error);
+      return;
+    }
     try {
       const response = await axios.get(`http://localhost:8000/login/${name}/${aadhaarNumber}/${constituency}`);
       console.log(response.data);
       if (response.data) {
         localStorage.setItem('place', constituency);
+        toast.success("Login successful");
         nav('/display-candidate');
       } else {
-        alert("Login failed");
+        toast.error("Login failed");
       }
     } catch (error) {
       console.error("Error during login", error);
-      alert("An error occurred during login");
+      toast.error("An error occurred during login");
     }
   };
 
   return (
     <div className="login-box">
+      <ToastContainer />
       <h2>Login</h2>
       <form>
         <div className="user-box">
