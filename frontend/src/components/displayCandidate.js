@@ -26,9 +26,6 @@ const DisplayCandidate = () => {
       console.log(response.data);
       setData(response.data);
       setShowNoCandidatesDialog(response.data.length === 0); // Show dialog if no candidates
-      setTimeout(() => {
-        navigate('/dashboard'); // Navigate to the dashboard page after a short delay
-      }, 4000); // Delay to allow the toast to be seen before navigation
     } catch (error) {
       console.error("Error fetching data:", error);
       toast.error("Error fetching data");
@@ -48,6 +45,9 @@ const DisplayCandidate = () => {
       if (response.status === 200) {
         toast.success("Vote registered successfully");
         setVotedCandidates(prev => new Set(prev).add(candidateName));
+        setTimeout(() => {
+          navigate('/dashboard'); // Navigate to the dashboard page after a short delay
+        }, 4000); // Delay to allow the toast to be seen before navigation
         fetchData(); // Refresh data to update vote counts
       }
     } catch (error) {

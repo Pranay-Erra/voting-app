@@ -36,7 +36,8 @@ const Login = () => {
       const response = await axios.get(`http://localhost:8000/login/${name}/${aadhaarNumber}/${constituency}`);
       console.log(response.data);
       if (response.data) {
-        localStorage.setItem('place', constituency);
+        localStorage.setItem('authToken', 'your-auth-token'); // Set a dummy auth token
+        localStorage.setItem('place', constituency); // Save the constituency to localStorage
         toast.success("Login successful");
         nav('/display-candidate');
       } else {

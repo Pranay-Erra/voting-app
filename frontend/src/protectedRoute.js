@@ -1,10 +1,10 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
-// Mock function to check if the user is authenticated
 const isAuthenticated = () => {
-  // Implement your authentication logic here, e.g., check localStorage or context
-  return localStorage.getItem('authToken') !== null;
+  const token = localStorage.getItem('authToken');
+  console.log("Auth token:", token); // Debugging line
+  return token !== null;
 };
 
 const ProtectedRoute = () => {
