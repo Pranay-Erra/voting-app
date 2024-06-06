@@ -1,10 +1,13 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-let db; 
+dotenv.config();
+
+let db;
 
 async function connectToDB(cb) {
-  const url = "mongodb+srv://pranayerra2003:Pranay@cluster0.gmrrjw4.mongodb.net/VOTING_APP?retryWrites=true&w=majority";
-  
+  const url = process.env.MONGODB_URI;
+
   try {
     await mongoose.connect(url, {
       useNewUrlParser: true,

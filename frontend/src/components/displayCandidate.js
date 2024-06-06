@@ -57,7 +57,9 @@ const DisplayCandidate = () => {
   };
 
   const handleCloseDialog = () => setShowNoCandidatesDialog(false);
-
+  const handleCandidateReg=()=>{
+   navigate('/candidate-reg');
+  }
   return (
     <>
       <ToastContainer />
@@ -77,7 +79,7 @@ const DisplayCandidate = () => {
         <div className="dialog">
           <p>No candidates found in your constituency.</p>
           <h3>Grab the opportunity to be the first one!</h3>
-          <button className="dialog-button">Candidate Registration</button>
+          <button className="dialog-button" onClick={handleCandidateReg} >Candidate Registration</button>
           <button className="dialog-button" onClick={handleCloseDialog}>Close</button>
         </div>
       )}
