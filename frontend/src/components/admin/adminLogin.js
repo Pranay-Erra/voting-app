@@ -15,6 +15,7 @@ const AdminLogin = () => {
       const response = await axios.get(`http://localhost:8000/admin-login/${name}/${password}`);
       console.log(response.data);
       if (response.data) {
+        localStorage.setItem('adminAuthToken', 'your-admin-auth-token'); // Set a dummy admin auth token
         toast.success("Login successful");
         setTimeout(() => {
           nav('/admin-home');
