@@ -50,7 +50,7 @@ const Votereg = () => {
                 toast.error('Failed to send OTP');
             }
         } catch (error) {
-            console.error("Error sending OTP:", error);
+            // console.error("Error sending OTP:", error);
             toast.error('Failed to send OTP');
         }
     };
@@ -65,7 +65,7 @@ const Votereg = () => {
                 toast.error('Invalid OTP');
             }
         } catch (error) {
-            console.error("Error verifying OTP:", error);
+            // console.error("Error verifying OTP:", error);
             toast.error('Failed to verify OTP');
         }
     };
@@ -80,13 +80,13 @@ const Votereg = () => {
                 `http://localhost:8000/voter-reg/${name}/${age}/${aadhaarNumber}/${address}/${constituency}/${phone}/${email}`,
                 { name, lastName, age, aadhaarNumber, address, constituency, phone, email, postalCode, gender, termsAccepted }
             );
-            console.log(response.data);
+            // console.log(response.data);
             if (response.data.success) {
                 nav('/login');
                 toast.success('Registration successful');
             }
         } catch (error) {
-            console.error("Error submitting form:", error);
+            // console.error("Error submitting form:", error);
             toast.error('Error submitting form');
         }
     };

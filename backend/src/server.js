@@ -23,27 +23,6 @@ app.get('/', (req, res) => {
   res.send("Server Running Successfully ✅");
 });
 
-// app.post('/voter-reg/:name/:age/:aadharNumber/:address/:district/:qualification/:caste/:phoneNum/:email/:NRI', async (req, res) => {
-//   try {
-//     const { name, age, aadharNumber, address, district, qualification, caste, phoneNum, NRI } = req.params;
-//     const result = await db.collection('voter_details').insertOne({
-//       name,
-//       age,
-//       aadharNumber,
-//       address,
-//       district,
-//       qualification,
-//       caste,
-//       phoneNum,
-//       email,
-//       NRI
-//     });
-//     res.json(result);
-//   } catch (error) {
-//     console.error('Error occurred:', error);
-//     res.status(500).json({ error: 'An error occurred while processing your request.' });
-//   }
-// });
 
 app.post('/voter-reg/:name/:age/:aadhaarNumber/:address/:constituency/:phone/:email', async (req, res) => {
   try {
@@ -70,65 +49,7 @@ app.post('/voter-reg/:name/:age/:aadhaarNumber/:address/:constituency/:phone/:em
 });
 
 
-// const candidateSchema = new mongoose.Schema({
-//   name: String,
-//   age: Number,
-//   aadhaarNumber: String,
-//   address: String,
-//   district: String,
-//   qualification: String,
-//   caste: String,
-//   phone: String,
-//   party: String,
-//   partySymbol: Buffer,
-// });
 
-// const Candidate = mongoose.model('Candidate', candidateSchema);
-
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage });
-
-
-// app.post('/candidate-reg', upload.single('partySymbol'), async (req, res) => {
-//   try {
-//     // Request body parameters
-//     const { name, age, aadhaarNumber, address, district, qualification, caste, phone, party } = req.body;
-
-//     // Check if all fields are provided
-//     if (!name || !age || !aadhaarNumber || !address || !district || !qualification || !caste || !phone || !party) {
-//       return res.status(400).send('All fields are required');
-//     }
-
-//     // Check if party symbol image is provided
-//     if (!req.file) {
-//       return res.status(400).send('Party symbol image is required');
-//     }
-
-//     // Retrieve party symbol from request buffer
-//     const partySymbol = req.file.buffer;
-
-//     // Create new Candidate document using Mongoose model
-//     const candidate = new Candidate({
-//       name,
-//       age,
-//       aadhaarNumber,
-//       address,
-//       district,
-//       qualification,
-//       caste,
-//       phone,
-//       party,
-//       partySymbol,
-//     });
-
-//     // Save candidate document to MongoDB
-//     await candidate.save();
-//     res.status(200).send('Candidate registered successfully');
-//   } catch (error) {
-//     console.error('Error registering candidate:', error);
-//     res.status(500).send('Error registering candidate');
-//   }
-// });
 
 const candidateSchema = new mongoose.Schema({
   name: String,
@@ -256,14 +177,7 @@ app.get('/dashboard', async (req, res) => {
     }
   });
 
-// app.get('/login/:name/:aadhaarNumber/:constituency', async (req, res) => {
-//   const result = await db.collection('voter_details').findOne({
-//     name: req.params.name,
-//     aadhaarNumber: req.params.aadhaarNumber,
-//     constituency: req.params.constituency
-//   });
-//   res.json(result);
-// });
+
 
 app.get('/login/:name/:aadhaarNumber/:constituency', async (req, res) => {
   try {
@@ -358,25 +272,7 @@ app.delete('/remove-candidate/:id', async (req, res) => {
 
 
 
-// app.get('/admin-voter', async (req, res) => {
-//   try {
-//     const voters = await db.collection("voter_details").aggregate([
-//       {
-//         $group: {
-//           _id: "$constituency",
-//           voters: { $push: "$$ROOT" }
-//         }
-//       },
-//       {
-//         $sort: { _id: 1 }
-//       }
-//     ]).toArray();
-//     res.json(voters);
-//   } catch (error) {
-//     console.error("Error fetching grouped voters:", error);
-//     res.status(500).send("Error fetching data");
-//   }
-// });
+
 
 app.get('/admin-voter', async (req, res) => {
   try {

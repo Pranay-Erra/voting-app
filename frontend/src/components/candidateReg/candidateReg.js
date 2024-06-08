@@ -64,10 +64,10 @@ const CandidateReg = () => {
           },
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
       toast.success("Candidate registered successfully");
     } catch (error) {
-      console.error("Error submitting form:", error);
+      // console.error("Error submitting form:", error);
       toast.error("Error submitting form");
     }
   };

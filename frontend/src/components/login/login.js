@@ -34,7 +34,7 @@ const Login = () => {
     }
     try {
       const response = await axios.get(`http://localhost:8000/login/${name}/${aadhaarNumber}/${constituency}`);
-      console.log(response.data);
+      // console.log(response.data);
       if (response.data) {
         localStorage.setItem('authToken', 'your-auth-token'); // Set a dummy auth token
         localStorage.setItem('place', constituency); // Save the constituency to localStorage
@@ -44,7 +44,7 @@ const Login = () => {
         toast.error("Login failed");
       }
     } catch (error) {
-      console.error("Error during login", error);
+      // console.error("Error during login", error);
       toast.error("An error occurred during login");
     }
   };

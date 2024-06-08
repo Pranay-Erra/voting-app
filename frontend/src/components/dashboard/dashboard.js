@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./dashboard.css";  // Ensure to create and import a CSS file for styling
-
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [name, setName] = useState('');
@@ -15,7 +16,8 @@ const Dashboard = () => {
       const sortedData = response.data.sort((a, b) => b.votes - a.votes);
       setData(sortedData);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      // console.error("Error fetching data:", error);
+      toast.error("Error fetching data");
     }
   };
 
@@ -26,6 +28,7 @@ const Dashboard = () => {
   return (
     <>
       <div className="search-fields">
+      <ToastContainer />
         <label>
           Name:
           <input

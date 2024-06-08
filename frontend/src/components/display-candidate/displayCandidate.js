@@ -23,11 +23,11 @@ const DisplayCandidate = () => {
           constituency: voterPlace // Include the voter's place in the request parameters
         }
       });
-      console.log(response.data);
+      // console.log(response.data);
       setData(response.data);
       setShowNoCandidatesDialog(response.data.length === 0); // Show dialog if no candidates
     } catch (error) {
-      console.error("Error fetching data:", error);
+      // console.error("Error fetching data:", error);
       toast.error("Error fetching data");
     }
   };
@@ -51,7 +51,7 @@ const DisplayCandidate = () => {
         fetchData(); // Refresh data to update vote counts
       }
     } catch (error) {
-      console.error("Error registering vote:", error);
+      // console.error("Error registering vote:", error);
       toast.error("Error registering vote");
     }
   };
