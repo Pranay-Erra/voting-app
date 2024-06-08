@@ -10,10 +10,12 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+const PORT = process.env.PORT || 8000;
+
 
 connectToDB(() => {
-  app.listen(8000, () => {
-    console.log('Server started at 8000');
+  app.listen(PORT, () => {
+    console.log(`Server started at ${PORT}`);
   });
 });
 
