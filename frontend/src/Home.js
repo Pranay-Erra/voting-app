@@ -22,7 +22,7 @@ const Home = () => {
         <>
         <div className="main">
             <div className="content">
-                <h1>Welcome to Your Voting Platform</h1>
+                <h1>Welcome to Digital Voting Platform</h1>
                 <p>Empowering you to make your voice heard. Register as a voter, candidate, or log in as an admin to manage the elections.</p>
                 <div className="button-group">
                     <button className="voter-btn" onClick={handleVoterRegistration}>Voter Registration</button>
