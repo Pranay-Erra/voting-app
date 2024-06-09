@@ -161,6 +161,7 @@ const CandidateReg = () => {
           <input
             type="tel"
             className="input"
+            maxLength="10"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             required
