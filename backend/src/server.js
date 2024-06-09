@@ -23,6 +23,11 @@ app.get('/', (req, res) => {
   res.send("Server Running Successfully ✅");
 });
 
+app.get('/hello', (req, res) => {
+  res.status(200).send('OK');
+});
+
+
 
 app.post('/voter-reg/:name/:age/:aadhaarNumber/:address/:constituency/:phone/:email', async (req, res) => {
   try {
