@@ -9,7 +9,7 @@ const AdminCandidate = () => {
 
   const fetchCandidates = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/admin-candidates");
+      const response = await axios.get("https://dvp.onrender.com/admin-candidates");
       setGroupedCandidates(response.data);
     } catch (error) {
       console.error("Error fetching grouped candidates:", error);
@@ -22,7 +22,7 @@ const AdminCandidate = () => {
 
   const handleRemove = async (candidateId) => {
     try {
-      const response = await axios.delete(`http://localhost:8000/remove-candidate/${candidateId}`);
+      const response = await axios.delete(`https://dvp.onrender.com/remove-candidate/${candidateId}`);
       if (response.status === 200) {
         toast.success('Candidate removed successfully');
         fetchCandidates(); // Refresh the list after removal

@@ -33,7 +33,7 @@ const Login = () => {
       return;
     }
     try {
-      const response = await axios.get(`http://localhost:8000/login/${name}/${aadhaarNumber}/${constituency}`);
+      const response = await axios.get(`https://dvp.onrender.com/login/${name}/${aadhaarNumber}/${constituency}`);
       // console.log(response.data);
       if (response.data) {
         localStorage.setItem('authToken', 'your-auth-token'); // Set a dummy auth token

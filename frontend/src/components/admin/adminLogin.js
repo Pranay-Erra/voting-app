@@ -12,7 +12,7 @@ const AdminLogin = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/admin-login/${name}/${password}`);
+      const response = await axios.get(`https://dvp.onrender.com/admin-login/${name}/${password}`);
       console.log(response.data);
       if (response.data) {
         localStorage.setItem('adminAuthToken', 'your-admin-auth-token'); // Set a dummy admin auth token

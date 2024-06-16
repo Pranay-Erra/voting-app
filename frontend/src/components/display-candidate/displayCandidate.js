@@ -16,7 +16,7 @@ const DisplayCandidate = () => {
   
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/display-candidate", {
+      const response = await axios.get("https://dvp.onrender.com/display-candidate", {
         params: {
           name,
           party,
@@ -41,7 +41,7 @@ const DisplayCandidate = () => {
 
   const handleVote = async (candidateName) => {
     try {
-      const response = await axios.post("http://localhost:8000/vote", { name: candidateName });
+      const response = await axios.post("https://dvp.onrender.com/vote", { name: candidateName });
       if (response.status === 200) {
         toast.success("Vote registered successfully");
         setVotedCandidates(prev => new Set(prev).add(candidateName));

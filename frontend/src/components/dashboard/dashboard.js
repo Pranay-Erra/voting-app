@@ -10,7 +10,7 @@ const Dashboard = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/dashboard", {
+      const response = await axios.get("https://dvp.onrender.com/dashboard", {
         params: { name, party }
       });
       const sortedData = response.data.sort((a, b) => b.votes - a.votes);

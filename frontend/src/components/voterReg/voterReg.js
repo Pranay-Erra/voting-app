@@ -42,7 +42,7 @@ const Votereg = () => {
 
     const sendOtp = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/send-otp', { email });
+            const response = await axios.post('https://dvp.onrender.com/send-otp', { email });
             if (response.data.success) {
                 setIsOtpSent(true);
                 setOtpVisible(true);
@@ -57,7 +57,7 @@ const Votereg = () => {
 
     const verifyOtp = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/verify-otp', { email, otp: otpInput });
+            const response = await axios.post('https://dvp.onrender.com/verify-otp', { email, otp: otpInput });
             if (response.data.success) {
                 setIsOtpVerified(true);
                 toast.success('OTP verified successfully');
@@ -76,7 +76,7 @@ const Votereg = () => {
         }
         try {
             const response = await axios.post(
-                `http://localhost:8000/voter-reg/${name}/${age}/${aadhaarNumber}/${address}/${constituency}/${phone}/${email}`,
+                `https://dvp.onrender.com/voter-reg/${name}/${age}/${aadhaarNumber}/${address}/${constituency}/${phone}/${email}`,
                 { name, lastName, age, aadhaarNumber, address, constituency, phone, email, postalCode, gender, termsAccepted }
             );
             if (response.data.success) {

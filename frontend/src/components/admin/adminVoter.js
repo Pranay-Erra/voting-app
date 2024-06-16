@@ -12,7 +12,7 @@ const AdminVoter = () => {
   const fetchVoters = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:8000/admin-voter");
+      const response = await axios.get("https://dvp.onrender.com/admin-voter");
       console.log("Full API Response:", response.data); // Log the full API response
       setGroupedVoters(response.data);
       setError(null);
@@ -30,7 +30,7 @@ const AdminVoter = () => {
 
   const handleRemove = async (VoterId) => {
     try {
-      const response = await axios.delete(`http://localhost:8000/remove-voter/${VoterId}`);
+      const response = await axios.delete(`https://dvp.onrender.com/remove-voter/${VoterId}`);
       if (response.status === 200) {
         toast.success('Voter removed successfully');
         fetchVoters(); // Refresh the list after removal

@@ -56,7 +56,7 @@ const CandidateReg = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/candidate-reg",
+        "https://dvp.onrender.com/candidate-reg",
         formData,
         {
           headers: {
